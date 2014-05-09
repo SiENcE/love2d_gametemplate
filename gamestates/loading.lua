@@ -26,6 +26,10 @@ function Loading:enteredState( nextscene, ressources )
 	self:log('Entered Loading',nextscene, ressources)
 
 	math.randomseed(os.time())
+	
+	self.fadein = { alpha = 0 }
+	-- Title text
+	flux.to(self.fadein, 0.25, { alpha = 1 }):ease("quadin")
 
 	-- if ressources available, load them
 	if ressources then
@@ -64,6 +68,8 @@ function Loading:exitedState()
 end
 
 function Loading:draw()
+	love.graphics.setColor(255, 255, 255, self.fadein.alpha * 255)
+	
 	drawLoadingBar()
 	if loader.resourceCount ~= 0 then percent = loader.loadedCount / loader.resourceCount end
 	local percentagestring = ("Loading .. %d%%"):format(percent*100)

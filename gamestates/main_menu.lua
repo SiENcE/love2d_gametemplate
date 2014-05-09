@@ -12,6 +12,10 @@ function MainMenu:enteredState()
 		{ 'Options', function() self:pushState('OptionsMenu') end },
 		{ 'Exit', function() self:exit() end }
 	})
+	
+	self.fadein = { alpha = 0 }
+	-- Title text
+	flux.to(self.fadein, 2, { alpha = 1 }):ease("linear")
 end
 
 function MainMenu:exitedState()
@@ -21,6 +25,7 @@ function MainMenu:exitedState()
 end
 
 function MainMenu:draw()
+	love.graphics.setColor(255, 255, 255, self.fadein.alpha * 255)
 	self.menu:draw()
 end
 
