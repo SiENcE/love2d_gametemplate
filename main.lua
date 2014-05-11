@@ -15,7 +15,7 @@ require 'gamestates.options_keyboard'
 require 'gamestates.ingame'
 
 -- global Ressources
-media = { images = {}, sounds = {} }
+media = { images = {}, quads = {}, sounds = {} }
 
 -- game instance
 local testgame = nil	-- main game object

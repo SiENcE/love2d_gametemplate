@@ -1,0 +1,54 @@
+<exporter version="1.0">
+    <!-- identifier of the exporter -->
+    <name>love2d-textureatlas</name>
+	
+    <!-- display name of the exporter for the combo box -->
+    <displayName>LÖVE</displayName>
+	
+    <!-- description of the exporter -->
+    <description>Textureatlas exporter for LÖVE.</description>
+
+    <!-- exporter version -->
+    <version>1.0</version>
+	
+    <!-- currently only one file allowed - more to come with update -->
+    <files>
+        <file>
+            <!-- name of this file variable -->
+            <name>lua</name>
+
+            <!-- human readable name (for GUI) -->
+            <displayName>LÖVE lua file</displayName>
+
+            <!-- file extension for the file -->
+            <fileExtension>lua</fileExtension>
+
+            <!-- description what the file contains, used in tooltips in the GUI -->
+            <description>Lua file for LÖVE</description>
+
+            <!-- name of the template file -->
+            <template>love2d-textureatlas.lua</template>
+        </file>
+    </files>
+
+    <!-- target framework supports trimming -->
+    <supportsTrimming>true</supportsTrimming>
+
+    <!-- target framework supports rotated sprites -->
+    <supportsRotation>false</supportsRotation>
+
+    <!-- rotated sprites direction (cw/ccw) -->
+    <rotationDirection>cw</rotationDirection>
+
+    <!-- supports npot sizes -->
+    <supportsNPOT>true</supportsNPOT>
+
+    <!-- supports file name stripping (remove .png etc) -->
+    <supportsTrimSpriteNames>yes</supportsTrimSpriteNames>
+
+    <!-- supports texure subpath -->
+    <supportsTextureSubPath>yes</supportsTextureSubPath>
+
+</exporter>
+
+

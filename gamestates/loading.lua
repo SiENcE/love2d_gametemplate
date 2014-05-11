@@ -22,6 +22,18 @@ local function drawLoadingBar()
 	love.graphics.rectangle("fill", x, y, w, h)
 end
 
+local function processQuads(ressources)
+	for k,v in pairs(ressources.images) do
+		if v.quads and type(v.quads) == 'table' then	
+			media.quads[ v[1] ] = {}
+			for i,j in pairs(v.quads) do
+				-- love.graphics.newQuad
+				media.quads[ v[1] ][i] = love.graphics.newQuad(unpack(j))
+			end
+		end
+	end
+end
+
 function Loading:enteredState( nextscene, ressources )
 	self:log('Entered Loading',nextscene, ressources)
 
@@ -31,39 +43,42 @@ function Loading:enteredState( nextscene, ressources )
 	-- Title text
 	flux.to(self.fadein, 0.25, { alpha = 1 }):ease("quadin")
 
-	-- if ressources available, load them
+	self.ressources = ressources
+	
+	self:log("adding sources ...")
 	if ressources then
-		if ressources.image then
-			for k,v in pairs(ressources.image) do
-				print(v[1], v[2])
+		if ressources.images then
+			for k,v in pairs(ressources.images) do
+				print(k, v[1], v[2])
 				loader.newImage(media.images, v[1], v[2])
 			end
 		end
 		if ressources.imagedata then
 			for k,v in pairs(ressources.imagedata) do
-				print(v[1], v[2])
+				print(k, v[1], v[2])
 				loader.newImageData(media.images, v[1], v[2])
 			end
 		end
 		if ressources.source then
 			for k,v in pairs(ressources.source) do
-				print(v[1], v[2], v[3])
+				print(k, v[1], v[2], v[3])
 				loader.newSource(media.sounds, v[1], v[2], v[3])
 			end
 		end
 		if ressources.sounddata then
 			for k,v in pairs(ressources.sounddata) do
-				print(v[1], v[2])
+				print(k, v[1], v[2])
 				loader.newSoundData(media.sounds, v[1], v[2])
 			end
 		end
 	end
 
 	self:log("start loading")
-	loader.start( function () self:gotoState( nextscene ) end, print)
+	loader.start( function () processQuads(ressources); self:gotoState( nextscene ) end, print)
 end
 
 function Loading:exitedState()
+	love.graphics.setColor(255, 255, 255, 255)
 	self:log('Exiting Loading')
 end
 

@@ -11,6 +11,7 @@ end
 
 function InGame:draw()
 	love.graphics.draw(media.images['climber'], 0,0)
+	love.graphics.draw(media.images['textureatlas'], media.quads['textureatlas']['left-hand-climber-hi3'] , love.mouse.getX(), love.mouse.getY())
 	love.graphics.print("Press ESC to go back", 250, 280)
 end
 
