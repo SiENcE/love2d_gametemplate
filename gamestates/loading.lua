@@ -2,6 +2,7 @@ local Game = require 'game'
 local Loading = Game:addState('Loading')
 
 local loader = require 'lib/love-loader'
+local Quad = require 'subclass/quad'
 
 local percent = 0
 local screenWidth, screenHeight = love.graphics.getWidth(), love.graphics.getHeight()
@@ -25,11 +26,11 @@ end
 local function processQuads(ressources)
 	for k,v in pairs(ressources.images) do
 		if v.quads and type(v.quads) == 'table' then	
-			media.quads[ v[1] ] = {}
 			for i,j in pairs(v.quads) do
-				-- love.graphics.newQuad
-				media.quads[ v[1] ][i] = love.graphics.newQuad(unpack(j))
+				media.quads[i] = Quad:new( media.images[ v[1] ], unpack(j))
 			end
+		else
+			media.quads[v[1]] = Quad:new( media.images[ v[1] ])
 		end
 	end
 end
