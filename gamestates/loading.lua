@@ -45,7 +45,8 @@ function Loading:enteredState( nextscene, ressources, ressourceholder )
 	flux.to(self.fadein, 0.25, { alpha = 1 }):ease("quadin")
 
 	self:log("adding sources ...")
-	if ressources and ressourceholder then
+	-- if not already loaded, load ressources
+	if ressources and not ressources.done and ressourceholder then
 		if ressources.images then
 			for k,v in pairs(ressources.images) do
 				print(k, v[1], v[2])
@@ -70,6 +71,8 @@ function Loading:enteredState( nextscene, ressources, ressourceholder )
 				loader.newSoundData(ressourceholder.sounds, v[1], v[2])
 			end
 		end
+		-- mark ressources as loaded
+		ressources.done = true
 	end
 
 	self:log("start loading")
