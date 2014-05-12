@@ -29,7 +29,7 @@ function OptionsMenu:keypressed(key, code)
 end
 
 function OptionsMenu:mousepressed(x,y,button)
-	TEsound.play( media.sounds['click'], 'sfx')
+	TEsound.play( _menu_.sounds['click'], 'sfx')
 	
 	self.optmenu:mousepressed(x,y,button)
 end

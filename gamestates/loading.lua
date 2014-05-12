@@ -23,20 +23,20 @@ local function drawLoadingBar()
 	love.graphics.rectangle("fill", x, y, w, h)
 end
 
-local function processQuads(ressources)
+local function processQuads(ressources, ressourceholder)
 	for k,v in pairs(ressources.images) do
 		if v.quads and type(v.quads) == 'table' then	
 			for i,j in pairs(v.quads) do
-				media.quads[i] = Quad:new( media.images[ v[1] ], unpack(j))
+				ressourceholder.quads[i] = Quad:new( ressourceholder.images[ v[1] ], unpack(j))
 			end
 		else
-			media.quads[v[1]] = Quad:new( media.images[ v[1] ])
+			ressourceholder.quads[v[1]] = Quad:new( ressourceholder.images[ v[1] ])
 		end
 	end
 end
 
-function Loading:enteredState( nextscene, ressources )
-	self:log('Entered Loading',nextscene, ressources)
+function Loading:enteredState( nextscene, ressources, ressourceholder )
+	self:log('Entered Loading')
 
 	math.randomseed(os.time())
 	
@@ -44,38 +44,36 @@ function Loading:enteredState( nextscene, ressources )
 	-- Title text
 	flux.to(self.fadein, 0.25, { alpha = 1 }):ease("quadin")
 
-	self.ressources = ressources
-	
 	self:log("adding sources ...")
-	if ressources then
+	if ressources and ressourceholder then
 		if ressources.images then
 			for k,v in pairs(ressources.images) do
 				print(k, v[1], v[2])
-				loader.newImage(media.images, v[1], v[2])
+				loader.newImage(ressourceholder.images, v[1], v[2])
 			end
 		end
 		if ressources.imagedata then
 			for k,v in pairs(ressources.imagedata) do
 				print(k, v[1], v[2])
-				loader.newImageData(media.images, v[1], v[2])
+				loader.newImageData(ressourceholder.images, v[1], v[2])
 			end
 		end
 		if ressources.source then
 			for k,v in pairs(ressources.source) do
 				print(k, v[1], v[2], v[3])
-				loader.newSource(media.sounds, v[1], v[2], v[3])
+				loader.newSource(ressourceholder.sounds, v[1], v[2], v[3])
 			end
 		end
 		if ressources.sounddata then
 			for k,v in pairs(ressources.sounddata) do
 				print(k, v[1], v[2])
-				loader.newSoundData(media.sounds, v[1], v[2])
+				loader.newSoundData(ressourceholder.sounds, v[1], v[2])
 			end
 		end
 	end
 
 	self:log("start loading")
-	loader.start( function () processQuads(ressources); self:gotoState( nextscene ) end, print)
+	loader.start( function () processQuads(ressources, ressourceholder); self:gotoState( nextscene ) end, print)
 end
 
 function Loading:exitedState()

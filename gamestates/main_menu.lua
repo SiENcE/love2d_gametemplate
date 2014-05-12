@@ -4,11 +4,10 @@ local MainMenu = Game:addState('MainMenu')
 function MainMenu:enteredState()
 	self:log('Entering MainMenu')
 
-	TEsound.playLooping( media.sounds['ANThology'], 'music', nil, 1.0)
+	TEsound.playLooping( _menu_.sounds['ANThology'], 'music', nil, 1.0)
 
 	self.menu = Menu:new({
---		{ 'Start Game', function() self:gotoState('InGame') end },
-		{ 'Start Game', function() self:gotoState('Loading', 'InGame', require( 'subclass/ingameressources' ) ) end },
+		{ 'Start Game', function() self:gotoState('Loading', 'InGame', require( 'subclass/ingameressources' ), _ingame_ ) end },
 		{ 'Options', function() self:pushState('OptionsMenu') end },
 		{ 'Exit', function() self:exit() end }
 	})
@@ -30,7 +29,7 @@ function MainMenu:draw()
 end
 
 function MainMenu:mousepressed(x,y,button)
-	TEsound.play( media.sounds['click'], 'sfx')
+	TEsound.play( _menu_.sounds['click'], 'sfx')
 	
 	self.menu:mousepressed(x,y,button)
 end
