@@ -17,9 +17,8 @@ local function drawLoadingBar()
 	x, y = x + 3, y + 3
 	w, h = w - 6, h - 7
 
-	if loader.loadedCount > 0 then
-		w = w * (loader.loadedCount / loader.resourceCount)
-	end
+	w = w * (loader.loadedCount / loader.resourceCount)
+
 	love.graphics.rectangle("fill", x, y, w, h)
 end
 
@@ -40,9 +39,11 @@ function Loading:enteredState( nextscene, ressources, ressourceholder )
 
 	math.randomseed(os.time())
 	
+	loader.loadedCount = 0
+	loader.resourceCount = 0
 	self.fadein = { alpha = 0 }
 	-- Title text
-	flux.to(self.fadein, 0.25, { alpha = 1 }):ease("quadin")
+--	flux.to(self.fadein, 0.25, { alpha = 1 }):ease("quadin")
 
 	self:log("adding sources ...")
 	-- if not already loaded, load ressources
@@ -76,7 +77,18 @@ function Loading:enteredState( nextscene, ressources, ressourceholder )
 	end
 
 	self:log("start loading")
-	loader.start( function () processQuads(ressources, ressourceholder); self:gotoState( nextscene ) end, print)
+--	loader.start( function () processQuads(ressources, ressourceholder); self:gotoState( nextscene ) end, print)
+	flux.to(self.fadein, 0.35, { alpha = 1 }):ease('linear'):oncomplete(
+			function()
+				loader.start( 
+					function()
+						flux.to(self.fadein, 0.35, { alpha = 0 }):ease('linear'):oncomplete(
+							function () processQuads(ressources, ressourceholder); self:gotoState( nextscene ) end
+						)
+					end
+					, print)
+			end
+		)
 end
 
 function Loading:exitedState()
