@@ -6,7 +6,7 @@ This is a gametemplate for LÖVE engine using middleclass, stateful, love-loader
 The base of this template is copied from kikito.
 
 Features
-
+==========
 - The aim of this template is to seperate ressource loading from scenes.
 - A ressource reference is submitted to a Loading State and the ressources are loaded via 'love-loader' library.
 - Loading of ressources is visualised via 'love-loader' library.
@@ -19,6 +19,7 @@ Features
 - Tweening library 'flux' is included.
 
 Sample
+==========
 ```
 media.quads['left-hand-climber-hi']:draw(0,0) -- single file image (no Quad)
 media.quads['left-hand-climber-hi3']:draw(love.mouse.getX(), love.mouse.getY()) --from texture atlas (image with Quads)
@@ -27,6 +28,7 @@ media.quads['left-hand-climber-hi3']:draw(love.mouse.getX(), love.mouse.getY()) 
 more Infos here: http://love2d.org/forums/viewtopic.php?f=5&t=77918
 
 License
+==========
+This gametemplate is distributed under the zlib/libpng License (http://opensource.org/licenses/Zlib)
 
-Distributed under the zlib/libpng License (http://opensource.org/licenses/Zlib)
 All libraries used by this game_template are licensed under thier own licenses! 
