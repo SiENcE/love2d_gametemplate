@@ -26,6 +26,7 @@ media.quads['left-hand-climber-hi3']:draw(love.mouse.getX(), love.mouse.getY()) 
 
 more Infos here: http://love2d.org/forums/viewtopic.php?f=5&t=77918
 
-```
 License
-Astray is distributed under the zlib/libpng License (http://opensource.org/licenses/Zlib)
+
+Distributed under the zlib/libpng License (http://opensource.org/licenses/Zlib)
+All libraries used by this game_template are licensed under thier own licenses! 
