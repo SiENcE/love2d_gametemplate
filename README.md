@@ -24,4 +24,7 @@ media.quads['left-hand-climber-hi']:draw(0,0) -- single file image (no Quad)
 media.quads['left-hand-climber-hi3']:draw(love.mouse.getX(), love.mouse.getY()) --from texture atlas (image with Quads)
 ```
 
+Script for TexturePacker (http://www.codeandweb.com/texturepacker) included!
+or use https://github.com/Bradshaw/Fudge
+
 more Infos here: http://love2d.org/forums/viewtopic.php?f=5&t=77918
