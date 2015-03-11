@@ -7,11 +7,11 @@ The base of this template is copied from kikito.
 
 Features
 ==========
-primary features:
 - The aim of this template is to seperate ressource loading from scenes.
 - You can easily develop with seperate Image-Files and later merge them into an Texture-Atlas, without changing your code :-) !
 
-How this gametemplate is working:
+Template description
+==========
 - A ressource reference is submitted to a Loading State and the ressources are loaded via 'love-loader' library.
 - Loading of ressources is visualised via 'love-loader' library.
 - After all ressources are loaded, the Loading-State switches to the Menu-Sate.
@@ -58,7 +58,8 @@ media.quads['left-hand-climber-hi']:draw(0,0)
 media.quads['left-hand-climber-hi3']:draw(love.mouse.getX(), love.mouse.getY())
 ```
 
-
+References
+==========
 Script for TexturePacker (http://www.codeandweb.com/texturepacker) included!
 or use https://github.com/Bradshaw/Fudge
 
