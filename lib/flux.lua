@@ -7,7 +7,7 @@
 -- under the terms of the MIT license. See LICENSE for details.
 --
 
-local flux = { _version = "0.1.2" }
+local flux = { _version = "0.1.4" }
 flux.__index = flux
 
 flux.tweens = {}
@@ -54,7 +54,8 @@ tween.__index = tween
 
 local function makefsetter(field)
   return function(self, x)
-    if type(x) ~= "function" and not getmetatable(x).__call then
+    local mt = getmetatable(x)
+    if type(x) ~= "function" and not (mt and mt.__call) then
       error("expected function or callable", 2)
     end
     local old = self[field]

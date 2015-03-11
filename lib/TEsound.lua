@@ -63,6 +63,18 @@ function TEsound.play(sound, tags, volume, pitch, func)
 	return #TEsound.channels
 end
 
+--[[
+-- play a 3D sound - you have to set the listener in your game code!!
+-- returns the source for manual stop/pause aso.
+function TEsound.play3d(sound, tags, volume, pitch, func, x, y, z, distmin, distmax)
+	local source = love.audio.newSource( sound )
+	source:setDistance( distmin or 1, distmax or 100 )
+	source:setPosition( x or 0, y or 0, z or 0 )
+	TEsound.play(source, tags, volume, pitch, func)
+	return source
+end
+]]--
+
 --- Play a repeating sound, or random sounds from a list. (with optional tag(s), volume, and pitch)
 -- @param sound See TEsound.play
 -- @param tags See TEsound.play
@@ -71,7 +83,6 @@ end
 -- @param pitch See TEsound.play
 function TEsound.playLooping(sound, tags, n, volume, pitch)
 	if not TEsound.music then return end
-	
 	return TEsound.play( sound, tags, volume, pitch,
 		(not n or n > 1) and function(d) TEsound.playLooping(sound, tags, (n and n-1), d[1], d[2]) end
 	)

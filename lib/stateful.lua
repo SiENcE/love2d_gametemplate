@@ -1,4 +1,4 @@
--- stateful.lua - v1.0.2 (2011-10)
+-- stateful.lua - v1.0.3 (2014-10)
 -- requires middleclass >2.0
 
 -- Copyright (c) 2011 Enrique García Cota
@@ -19,10 +19,6 @@ local _callbacks = {
 }
 
 local _BaseState = {}
-
-for callbackName,_ in pairs(_callbacks) do
-  _BaseState[callbackName] = function() end
-end
 
 local function _addStatesToClass(klass, superStates)
   klass.static.states = {}
@@ -90,7 +86,7 @@ local function _assertExistingState(self, state, stateName)
 end
 
 local function _invokeCallback(self, state, callbackName, ...)
-  if state then state[callbackName](self, ...) end
+  if state and state[callbackName] then state[callbackName](self, ...) end
 end
 
 local function _getCurrentState(self)
@@ -109,7 +105,6 @@ local function _getStateIndexFromStackByName(self, stateName)
   for i = #self.__stateStack, 1, -1 do
     if self.__stateStack[i] == target then return i end
   end
-  return 0
 end
 
 local function _getStateName(self, target)
@@ -163,12 +158,15 @@ end
 function Stateful:popState(stateName)
 
   local oldStateIndex = _getStateIndexFromStackByName(self, stateName)
-  local oldState = self.__stateStack[oldStateIndex]
+  local oldState
+  if oldStateIndex then
+    oldState = self.__stateStack[oldStateIndex]
 
-  _invokeCallback(self, oldState, 'poppedState')
-  _invokeCallback(self, oldState, 'exitedState')
+    _invokeCallback(self, oldState, 'poppedState')
+    _invokeCallback(self, oldState, 'exitedState')
 
-  table.remove(self.__stateStack, oldStateIndex)
+    table.remove(self.__stateStack, oldStateIndex)
+  end
 
   local newState = _getCurrentState(self)
 
