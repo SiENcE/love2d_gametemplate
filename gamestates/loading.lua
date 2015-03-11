@@ -22,14 +22,14 @@ local function drawLoadingBar()
 	love.graphics.rectangle("fill", x, y, w, h)
 end
 
-local function processQuads(ressources, ressourceholder)
-	for k,v in pairs(ressources.images) do
-		if v.quads and type(v.quads) == 'table' then	
-			for i,j in pairs(v.quads) do
-				ressourceholder.quads[i] = Quad:new( ressourceholder.images[ v[1] ], unpack(j))
+local function processTexture(ressources, ressourceholder)
+	for k,v in pairs(ressources.image) do
+		if v.quad and type(v.quad) == 'table' then	
+			for i,j in pairs(v.quad) do
+				ressourceholder.texture[i] = Quad:new( ressourceholder.image[ v[1] ], unpack(j))
 			end
 		else
-			ressourceholder.quads[v[1]] = Quad:new( ressourceholder.images[ v[1] ])
+			ressourceholder.texture[v[1]] = Quad:new( ressourceholder.image[ v[1] ])
 		end
 	end
 end
@@ -48,28 +48,28 @@ function Loading:enteredState( nextscene, ressources, ressourceholder )
 	self:log("adding sources ...")
 	-- if not already loaded, load ressources
 	if ressources and not ressources.done and ressourceholder then
-		if ressources.images then
-			for k,v in pairs(ressources.images) do
+		if ressources.image then
+			for k,v in pairs(ressources.image) do
 				print(k, v[1], v[2])
-				loader.newImage(ressourceholder.images, v[1], v[2])
+				loader.newImage(ressourceholder.image, v[1], v[2])
 			end
 		end
 		if ressources.imagedata then
 			for k,v in pairs(ressources.imagedata) do
 				print(k, v[1], v[2])
-				loader.newImageData(ressourceholder.images, v[1], v[2])
+				loader.newImageData(ressourceholder.image, v[1], v[2])
 			end
 		end
 		if ressources.source then
 			for k,v in pairs(ressources.source) do
 				print(k, v[1], v[2], v[3])
-				loader.newSource(ressourceholder.sounds, v[1], v[2], v[3])
+				loader.newSource(ressourceholder.texture, v[1], v[2], v[3])
 			end
 		end
 		if ressources.sounddata then
 			for k,v in pairs(ressources.sounddata) do
 				print(k, v[1], v[2])
-				loader.newSoundData(ressourceholder.sounds, v[1], v[2])
+				loader.newSoundData(ressourceholder.texture, v[1], v[2])
 			end
 		end
 		-- mark ressources as loaded
@@ -77,13 +77,16 @@ function Loading:enteredState( nextscene, ressources, ressourceholder )
 	end
 
 	self:log("start loading")
---	loader.start( function () processQuads(ressources, ressourceholder); self:gotoState( nextscene ) end, print)
+--	loader.start( function () processTexture(ressources, ressourceholder); self:gotoState( nextscene ) end, print)
 	flux.to(self.fadein, 0.35, { alpha = 1 }):ease('linear'):oncomplete(
 			function()
 				loader.start( 
 					function()
 						flux.to(self.fadein, 0.35, { alpha = 0 }):ease('linear'):oncomplete(
-							function () processQuads(ressources, ressourceholder); self:gotoState( nextscene ) end
+							function()
+								processTexture( ressources, ressourceholder )
+								self:gotoState( nextscene )
+							end
 						)
 					end
 					, print)

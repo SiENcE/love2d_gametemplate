@@ -1,5 +1,5 @@
 local res = {}
-res.images = {
+res.image = {
 }
 res.imagedata = {
 }

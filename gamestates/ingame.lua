@@ -10,8 +10,8 @@ function InGame:exitedState()
 end
 
 function InGame:draw()
-	_ingame_.quads['left-hand-climber-hi']:draw(0,0)
-	_ingame_.quads['left-hand-climber-hi3']:draw(love.mouse.getX(), love.mouse.getY())
+	_ingame_.texture['left-hand-climber-hi']:draw(0,0)
+	_ingame_.texture['A_left-hand-climber-hi3']:draw(love.mouse.getX(), love.mouse.getY())
 	love.graphics.print("Press ESC to go back", 250, 280)
 end
 

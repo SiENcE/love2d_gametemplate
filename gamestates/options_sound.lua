@@ -28,7 +28,7 @@ function SoundMenu:keypressed(key, code)
 end
 
 function SoundMenu:mousepressed(x,y,button)
-	TEsound.play( _menu_.sounds['click'], 'sfx')
+	TEsound.play( _menu_.texture['click'], 'sfx')
 	
 	self.sndmenu:mousepressed(x,y,button)
 end
