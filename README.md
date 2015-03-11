@@ -54,8 +54,8 @@ res.images = {
 
 same code using it:
 ```
-media.quads['left-hand-climber-hi']:draw(0,0) -- single file image (no Quad)
-media.quads['left-hand-climber-hi3']:draw(love.mouse.getX(), love.mouse.getY()) --from texture atlas (image with Quads)
+media.quads['left-hand-climber-hi']:draw(0,0)
+media.quads['left-hand-climber-hi3']:draw(love.mouse.getX(), love.mouse.getY())
 ```
 
 
