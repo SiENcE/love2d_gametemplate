@@ -2,7 +2,7 @@ local Game = require 'game'
 local Loading = Game:addState('Loading')
 
 local loader = require 'lib/love-loader'
-local Quad = require 'subclass/quad'
+local Quad = require 'lib/quad'
 
 local percent = 0
 local screenWidth, screenHeight = love.graphics.getWidth(), love.graphics.getHeight()
