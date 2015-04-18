@@ -5,6 +5,7 @@ local class = require ( 'lib/middleclass' )
 local Quad = class('Quad')
 
 function Quad:initialize(image, x, y, width, height, sw, sh)
+	print('Quad:initialize', image, x, y, width, height, sw, sh)
 	self.image = image
 	self.x = x
 	self.y = y
@@ -12,8 +13,11 @@ function Quad:initialize(image, x, y, width, height, sw, sh)
 	self.height = height
 	self.sw = sw
 	self.sh = sh
-	if x and y and width and height then
-		self.quad = love.graphics.newQuad(x, y, width, height, sw, sh)
+	if self.x and self.y and self.width and self.height then
+		self.quad = love.graphics.newQuad( self.x, self.y, self.width, self.height, self.sw, self.sh )
+	else
+		self.width = self.image:getWidth()
+		self.height = self.image:getHeight()
 	end
 end
 
