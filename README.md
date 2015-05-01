@@ -54,7 +54,7 @@ media.quads['left-hand-climber-hi3']:draw(love.mouse.getX(), love.mouse.getY())
 References
 ==========
 Texture Atlas compiler scripts included!
-* Shoebox (renderhjs.net/shoebox/)
+* Shoebox (recommed!) (http://renderhjs.net/shoebox/)
 * TexturePacker (http://www.codeandweb.com/texturepacker)
 
 or use https://github.com/Bradshaw/Fudge
