@@ -53,7 +53,10 @@ media.quads['left-hand-climber-hi3']:draw(love.mouse.getX(), love.mouse.getY())
 
 References
 ==========
-Script for TexturePacker (http://www.codeandweb.com/texturepacker) included!
+Texture Atlas compiler scripts included!
+* Shoebox (renderhjs.net/shoebox/)
+* TexturePacker (http://www.codeandweb.com/texturepacker)
+
 or use https://github.com/Bradshaw/Fudge
 
 more Infos here: http://love2d.org/forums/viewtopic.php?f=5&t=77918
