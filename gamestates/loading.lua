@@ -2,29 +2,38 @@ local Game = require 'game'
 local Loading = Game:addState('Loading')
 
 local loader = require 'lib/love-loader'
-local Quad = require 'lib/quad'
+local Quad	 = require 'lib/quad'
 
-local percent = 0
-local screenWidth, screenHeight = love.graphics.getWidth(), love.graphics.getHeight()
+local currentBackground = 1
+local background = {}
+--background[1] = love.graphics.newImage("media/images/loading/1.png")
+--background[2] = love.graphics.newImage("media/images/loading/2.png")
+--background[3] = love.graphics.newImage("media/images/loading/3.png")
 
-local function drawLoadingBar()
-	local separation = 30;
-	local w = screenWidth - 2*separation
-	local h = 50;
-	local x,y = separation, screenHeight - separation - h;
-	love.graphics.rectangle("line", x, y, w, h)
+--[[
+local loader = {}
 
-	x, y = x + 3, y + 3
-	w, h = w - 6, h - 7
+loader.newImage = love.graphics.newImage
+loader.newSource = love.audio.newSource
+loader.newFont = love.graphics.newFont
+-- ... add the others if you need them
 
-	w = w * (loader.loadedCount / loader.resourceCount)
-
-	love.graphics.rectangle("fill", x, y, w, h)
+local f,g
+loader.start = function(all, one)
+  f,g = all,one
 end
 
-local function processTexture(ressources, ressourceholder)
+loader.update = function()
+  g()
+  f()
+end
+
+return loader
+]]--
+
+local function processTexture( ressources, ressourceholder )
 	for k,v in pairs(ressources.image) do
-		if v.quad and type(v.quad) == 'table' then	
+		if v.quad and type(v.quad) == 'table' then
 			for i,j in pairs(v.quad) do
 				ressourceholder.texture[i] = Quad:new( ressourceholder.image[ v[1] ], unpack(j))
 			end
@@ -34,58 +43,68 @@ local function processTexture(ressources, ressourceholder)
 	end
 end
 
-function Loading:enteredState( nextscene, ressources, ressourceholder )
-	self:log('Entered Loading')
+function Loading:enteredState( nextscene, ressources, ressourceholder, filepath, levelname, gamemode )
+	print('Entered Loading ...', filepath, levelname, gamemode)
+	if background and #background > 0 then
+		currentBackground = math.random(#background)
+	end
 
-	math.randomseed(os.time())
-	
-	loader.loadedCount = 0
-	loader.resourceCount = 0
-	self.fadein = { alpha = 0 }
-	-- Title text
---	flux.to(self.fadein, 0.25, { alpha = 1 }):ease("quadin")
+	self.loading_fadein = { alpha = 0 }
+	-- set to 0 to show no loadbar (because love-loader is only resetted when started)
+	loader.loadedCount=0
+	loader.resourceCount=0
 
-	self:log("adding sources ...")
 	-- if not already loaded, load ressources
 	if ressources and not ressources.done and ressourceholder then
+		print("adding sources ...")
 		if ressources.image then
 			for k,v in pairs(ressources.image) do
-				print(k, v[1], v[2])
+--				print(k, v[1], v[2])
 				loader.newImage(ressourceholder.image, v[1], v[2])
 			end
 		end
 		if ressources.imagedata then
 			for k,v in pairs(ressources.imagedata) do
-				print(k, v[1], v[2])
+--				print(k, v[1], v[2])
 				loader.newImageData(ressourceholder.image, v[1], v[2])
 			end
 		end
 		if ressources.source then
 			for k,v in pairs(ressources.source) do
-				print(k, v[1], v[2], v[3])
-				loader.newSource(ressourceholder.texture, v[1], v[2], v[3])
+--				print(k, v[1], v[2], v[3])
+				loader.newSource(ressourceholder.sound, v[1], v[2], v[3])
 			end
 		end
 		if ressources.sounddata then
 			for k,v in pairs(ressources.sounddata) do
-				print(k, v[1], v[2])
-				loader.newSoundData(ressourceholder.texture, v[1], v[2])
+--				print(k, v[1], v[2])
+				loader.newSoundData(ressourceholder.sound, v[1], v[2])
 			end
 		end
 		-- mark ressources as loaded
-		ressources.done = true
+--		ressources.done = true
+	else
+		-- set to 1 to show a full loadbar
+		loader.loadedCount=1
+		loader.resourceCount=1
+		print('Ressources already loaded or not specified!')
 	end
 
-	self:log("start loading")
---	loader.start( function () processTexture(ressources, ressourceholder); self:gotoState( nextscene ) end, print)
-	flux.to(self.fadein, 0.35, { alpha = 1 }):ease('linear'):oncomplete(
+	flux.to(self.loading_fadein, 0.5, { alpha = 1 }):ease('quadin'):oncomplete(
 			function()
-				loader.start( 
+				loader.start(
 					function()
-						flux.to(self.fadein, 0.35, { alpha = 0 }):ease('linear'):oncomplete(
+						flux.to(self.loading_fadein, 0.5, { alpha = 0 }):ease('quadout'):oncomplete(
 							function()
-								processTexture( ressources, ressourceholder )
-								self:gotoState( nextscene )
+								-- if not already processed
+								if ressources and not ressources.done and ressourceholder then
+									-- process atlases into textures
+									processTexture( ressources, ressourceholder )
+
+									-- mark ressources as loaded
+									ressources.done = true
+								end
+								self:gotoState( nextscene, filepath, levelname, gamemode )
 							end
 						)
 					end
@@ -95,17 +114,41 @@ function Loading:enteredState( nextscene, ressources, ressourceholder )
 end
 
 function Loading:exitedState()
+	print('Exiting Loading')
 	love.graphics.setColor(255, 255, 255, 255)
-	self:log('Exiting Loading')
+
+	self.loading_fadein = nil
 end
 
+local backImageSize = { w=1280, h=720}
+local screenposition_ = { x=0, y=0 }
+local boxsize = { w = 300, h = 30 }
+local seperator = 3
+local percent = 0
+local center = { x=0, y=0 }
 function Loading:draw()
-	love.graphics.setColor(255, 255, 255, self.fadein.alpha * 255)
+	screenposition_.x = (self:GetScreenwidth()-backImageSize.w)/2
+	screenposition_.y = (self:GetScreenheight()-backImageSize.h)/2
+	center = { x = backImageSize.w/2 + screenposition_.x, y = backImageSize.h/2 + screenposition_.y}
 	
-	drawLoadingBar()
+	love.graphics.setColor(255, 255, 255, self.loading_fadein.alpha * 115)
+	if background and currentBackground and background[currentBackground] then
+		backImageSize = { w = background[currentBackground]:getWidth(), h = background[currentBackground]:getHeight() }
+		love.graphics.draw(background[currentBackground], screenposition_.x, screenposition_.y)
+	end
+	love.graphics.setColor(255, 255, 255, self.loading_fadein.alpha * 250)
+
+	-- draw percentage string
 	if loader.resourceCount ~= 0 then percent = loader.loadedCount / loader.resourceCount end
 	local percentagestring = ("Loading .. %d%%"):format(percent*100)
-    love.graphics.print(percentagestring, screenWidth/2-string.len(percentagestring)*2, screenHeight/2)
+	love.graphics.print(percentagestring, center.x-string.len(percentagestring)*2,center.y)
+	
+	-- draw loading box TLfres.ws, TLfres.hs
+	love.graphics.setColor(128, 128, 128, self.loading_fadein.alpha * 200)
+	love.graphics.rectangle("line", center.x-boxsize.w-seperator, center.y+20-seperator, boxsize.w*2+seperator*2, boxsize.h+seperator*2)
+	love.graphics.setColor(255, 255, 255, self.loading_fadein.alpha * 200)
+	local w = boxsize.w*2 * (loader.loadedCount / loader.resourceCount)
+	love.graphics.rectangle("fill", center.x-boxsize.w, center.y+20, w, boxsize.h)
 end
 
 function Loading:update( dt )

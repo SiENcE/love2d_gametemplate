@@ -6,12 +6,12 @@ local Button = class('Button')
 local width = 200
 local height = 50
 local spacing = 20 -- vertical spacing
-
+local Yoffset = 100
 
 -- private methods
 local function getBoundingBox(self)
   local x = love.graphics.getWidth() / 2 - width / 2
-  local y = 200 + (self.position - 1) * (height + spacing)
+  local y = 200 + (self.position - 1) * (height + spacing)	+ Yoffset
 
   return x,y,width,height
 end

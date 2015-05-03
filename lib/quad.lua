@@ -5,7 +5,7 @@ local class = require ( 'lib/middleclass' )
 local Quad = class('Quad')
 
 function Quad:initialize(image, x, y, width, height, sw, sh)
-	print('Quad:initialize', image, x, y, width, height, sw, sh)
+--	print('Quad:initialize', image, x, y, width, height, sw, sh)
 	self.image = image
 	self.x = x
 	self.y = y
