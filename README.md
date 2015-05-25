@@ -1,6 +1,8 @@
 love2d_gametemplate
 ===================
 
+[![Join the chat at https://gitter.im/SiENcE/love2d_gametemplate](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/SiENcE/love2d_gametemplate?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is a gametemplate for LÖVE engine using middleclass, stateful, love-loader, TESound and cron libraries.
 
 The base of this template is copied from kikito.
