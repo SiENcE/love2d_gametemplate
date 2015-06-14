@@ -7,8 +7,8 @@ The base of this template is copied from kikito.
 
 Features
 ==========
-- The aim of this template is to seperate ressource loading from scenes.
-- You can easily develop with seperate Image-Files and later merge them into an Texture-Atlas, without changing your code :-) !
+- The aim of this template is to separate ressource loading from scenes.
+- You can easily develop with separate Image-Files and later merge them into an Texture-Atlas, without changing one line of code :-) !
 
 Template description
 ==========
