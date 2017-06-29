@@ -41,7 +41,7 @@ function Button:draw()
 end
 
 function Button:mousepressed(mx, my, button)
-  if button == 'l' and isInside(self, mx, my) then
+  if (button == 'l' or button == 1) and isInside(self, mx, my) then
     self.callback()
   end
 end

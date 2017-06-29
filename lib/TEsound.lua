@@ -11,8 +11,8 @@ TEsound.volumeLevels = {}	-- Volume levels that multiply the volumes of sounds w
 TEsound.pitchLevels = {}	-- Pitch levels that multiply the pitches of sounds with those tags
 
 TEsound.soundsPlayedThisFrame = {}
-TEsound.currentlyPlayingSources = 0
-TEsound.currentlyPlayingSourcesLimit = 32
+--TEsound.currentlyPlayingSources = 0
+TEsound.currentlyPlayingSourcesLimit = 64
 TEsound.sound = true
 TEsound.music = true
 
@@ -25,35 +25,36 @@ TEsound.music = true
 -- @param pitch A number which specifies the speed/pitch the sound will be played it. If the sound has a tag which a pitch has been specified for, it will multiply this number.
 -- @param func A function which will be called when the sound is finished playing (it's passed one parameter - a list with the sound's volume and pitch). If omitted, no function will be used.
 function TEsound.play(sound, tags, volume, pitch, func)
-	if not TEsound.sound then return end
-
 	if not sound then
 		print("Your sound source is nil.")
 		return nil, "Your sound source is nil."
 	end
-	
+
 	-- arrays not supported, because loading of sounds had to be done before
---	if type(sound) == "table" then sound = sound[math.random(#sound)] end
-	
+	if type(sound) == "table" then sound = sound[math.random(#sound)] end
+
 	if sound.type and sound:type() ~= "Source" and sound:type() ~= "SoundData" then
 		print("You must use a valid sound source (Source or SoundData).")
 		return nil, "You must use a valid sound source."
 	end
-		
-	if TEsound.soundsPlayedThisFrame[sound] then return end	
-	if TEsound.currentlyPlayingSources >= TEsound.currentlyPlayingSourcesLimit then return end
+
+	if TEsound.soundsPlayedThisFrame[sound] then return end
+
+	--if TEsound.currentlyPlayingSources >= TEsound.currentlyPlayingSourcesLimit then return end
+	if love.audio.getSourceCount() >= TEsound.currentlyPlayingSourcesLimit then return end
 
 	TEsound.soundsPlayedThisFrame[sound] = true
-	TEsound.currentlyPlayingSources = TEsound.currentlyPlayingSources + 1
-		
+	--TEsound.currentlyPlayingSources = TEsound.currentlyPlayingSources + 1
+
 	if sound.type and sound:type() == "Source" then
 		table.insert(TEsound.channels, { sound, func, {volume or 1, pitch or 1}, tags=(type(tags) == "table" and tags or {tags}) })
 --		print( "play music - channel:", #TEsound.channels, tags)
 	else
 		table.insert(TEsound.channels, { love.audio.newSource(sound), func, {volume or 1, pitch or 1}, tags=(type(tags) == "table" and tags or {tags}) })
 --		print( "play sound - channel:", #TEsound.channels, tags )
---		print( "play sound - channel:", #TEsound.channels, tags, sound:getChannels(), sound:getSampleRate() )
 	end
+
+	-- print( "play sound - channel:", #TEsound.channels, tags, sound:getChannels() )
 
 	local s = TEsound.channels[#TEsound.channels]
 	s[1]:play()
@@ -104,6 +105,13 @@ function TEsound.volume(channel, volume)
 	end
 end
 
+-- get the volume of a specific channel
+-- @param channel
+-- @return volume of this channel
+function TEsound.getVolume(channel)
+	return TEsound.volumeLevels[channel]
+end
+
 --- Sets the pitch of channel or tag and its loops (if any).
 -- @param channel See TEsound.volume
 -- @param pitch See TEsound.play. If omitted, effectively resets pitch to 1.
@@ -149,10 +157,9 @@ function TEsound.cleanup()
 		if v[1]:isStopped() then
 			if v[2] then v[2](v[3]) end		-- allow sounds to use custom functions (primarily for looping, but be creative!)
 			table.remove(TEsound.channels, k)
-			TEsound.currentlyPlayingSources = TEsound.currentlyPlayingSources - 1
 		end
 	end
-	
+
 	TEsound.soundsPlayedThisFrame = {}
 end
 

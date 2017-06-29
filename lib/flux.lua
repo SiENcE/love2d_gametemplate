@@ -1,17 +1,56 @@
 --
 -- flux
 --
--- Copyright (c) 2014, rxi
+-- Copyright (c) 2016 rxi
+-- bounce added by SiENcE
 --
 -- This library is free software; you can redistribute it and/or modify it
 -- under the terms of the MIT license. See LICENSE for details.
 --
 
-local flux = { _version = "0.1.4" }
+local flux = { _version = "0.1.5" }
 flux.__index = flux
 
 flux.tweens = {}
 flux.easing = { linear = function(p) return p end }
+
+--[[
+// BOUNCE EASING: exponentially decaying parabolic bounce
+flux.easing["bounceout"] = function(p)
+                                if p < ( 1 / 2.75 ) then
+                                    return (7.5625 * p * p)
+                                elseif p < ( 2 / 2.75 ) then
+                                    local p = p - ( 1.5 / 2.75 )
+                                    return (7.5625 * ( p ) * p + 0.75)
+                                elseif p < ( 2.5 / 2.75 ) then
+                                    local p = p - ( 2.25 / 2.75 )
+                                    return (7.5625 * ( p ) * p + 0.9375)
+                                else
+                                    local p = p - ( 2.625 / 2.75 )
+                                    return (7.5625 * ( p ) * p + 0.984375)
+                                end
+                            end
+]]
+
+bounce = function (p)
+  p = 1-p
+  local t = p/1
+  local b = 1
+  local c = -1
+  
+  if t < 1/2.75 then
+    return c*(7.5625*t*t) + b
+  elseif t < (2/2.75) then
+    t = t - (1.5/2.75)
+    return c*(7.5625*t*t + .75) + b
+  elseif t < 2.5/2.75 then
+    t = t - (2.25/2.75)
+    return c*(7.5625*t*t + .9375) + b
+  else
+    t = t - (2.625/2.75)
+    return c*(7.5625*t*t + .984375) + b
+  end
+end
 
 local easing = {
   quad    = "p * p",
@@ -22,7 +61,8 @@ local easing = {
   sine    = "-math.cos(p * (math.pi * .5)) + 1",
   circ    = "-(math.sqrt(1 - (p * p)) - 1)",
   back    = "p * p * (2.7 * p - 1.7)",
-  elastic = "-(2^(10 * (p - 1)) * math.sin((p - 1.075) * (math.pi * 2) / .3))"
+  elastic = "-(2^(10 * (p - 1)) * math.sin((p - 1.075) * (math.pi * 2) / .3))",
+  bounce = "bounce(p)"
 }
 
 local makefunc = function(str, expr)
@@ -37,13 +77,13 @@ for k, v in pairs(easing) do
     return 1 - ($e)
   ]], v)
   flux.easing[k .. "inout"] = makefunc([[
-    p = p * 2 
+    p = p * 2
     if p < 1 then
       return .5 * ($e)
     else
       p = 2 - p
       return .5 * (1 - ($e)) + .5
-    end 
+    end
   ]], v)
 end
 
@@ -158,7 +198,7 @@ function flux:update(deltatime)
         t._onstart()
         t._onstart = nil
       end
-      t.progress = t.progress + t.rate * deltatime 
+      t.progress = t.progress + t.rate * deltatime
       local p = t.progress
       local x = p >= 1 and 1 or flux.easing[t._ease](p)
       for k, v in pairs(t.vars) do
@@ -205,7 +245,7 @@ function flux:remove(x)
     self[x] = self[#self]
     return table.remove(self)
   end
-  for i, v in pairs(self) do
+  for i, v in ipairs(self) do
     if v == x then
       return flux.remove(self, i)
     end
