@@ -1,7 +1,7 @@
 function love.conf(t)
-    t.title = "stateful"		-- The title of the window the game is in (string)
+    t.title = "github_love2d_gametemplate"		-- The title of the window the game is in (string)
     t.author = "" -- The author of the game (string)
-    t.identity = ""-- The name of the save directory (string)
+    t.identity = "github_love2d_gametemplate"-- The name of the save directory (string)
 --    t.version = 0             -- The LÖVE version this game was made for (number)
     t.console = true            -- Attach a console (boolean, Windows only)
 	t.screen = {}
