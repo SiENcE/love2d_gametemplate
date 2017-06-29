@@ -5,6 +5,7 @@ local KeyboardMenu = Game:addState('KeyboardMenu', MainMenu)
 
 function KeyboardMenu:enteredState()
   self:log('Entering KeyboardMenu')
+  love.graphics.setColor( 255, 255, 255, 255 )
 
   self.keymenu = Menu:new({
     { 'Keyboard', function() end },
@@ -28,7 +29,7 @@ function KeyboardMenu:keypressed(key, code)
 end
 
 function KeyboardMenu:mousepressed(x,y,button)
-	TEsound.play( _menu_.texture['click'], 'sfx')
+	TEsound.play( _menu_.sound['click'], 'sfx')
 	
 	self.keymenu:mousepressed(x,y,button)
 end

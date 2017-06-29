@@ -3,6 +3,7 @@ local InGame = Game:addState('InGame')
 
 function InGame:enteredState()
 	self:log('Entering InGame')
+	love.graphics.setColor( 255, 255, 255, 255 )
 end
 
 function InGame:exitedState()

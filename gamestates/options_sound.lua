@@ -5,6 +5,7 @@ local SoundMenu = Game:addState('SoundMenu', MainMenu)
 
 function SoundMenu:enteredState()
   self:log('Entering SoundMenu')
+  love.graphics.setColor( 255, 255, 255, 255 )
 
   self.sndmenu = Menu:new({
     { 'Sound', function() end },
@@ -28,7 +29,7 @@ function SoundMenu:keypressed(key, code)
 end
 
 function SoundMenu:mousepressed(x,y,button)
-	TEsound.play( _menu_.texture['click'], 'sfx')
+	TEsound.play( _menu_.sound['click'], 'sfx')
 	
 	self.sndmenu:mousepressed(x,y,button)
 end

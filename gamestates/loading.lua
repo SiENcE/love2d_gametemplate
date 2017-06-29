@@ -45,6 +45,8 @@ end
 
 function Loading:enteredState( nextscene, ressources, ressourceholder, filepath, levelname, gamemode )
 	print('Entered Loading ...', filepath, levelname, gamemode)
+	love.graphics.setColor( 255, 255, 255, 255 )
+	
 	if background and #background > 0 then
 		currentBackground = math.random(#background)
 	end

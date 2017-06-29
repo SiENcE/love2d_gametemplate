@@ -5,6 +5,7 @@ local OptionsMenu = Game:addState('OptionsMenu', MainMenu)
 
 function OptionsMenu:enteredState()
   self:log('Entering OptionsMenu')
+  love.graphics.setColor( 255, 255, 255, 255 )
 
   self.optmenu = Menu:new({
     { 'Keyboard', function() self:pushState('KeyboardMenu') end },
@@ -29,7 +30,7 @@ function OptionsMenu:keypressed(key, code)
 end
 
 function OptionsMenu:mousepressed(x,y,button)
-	TEsound.play( _menu_.texture['click'], 'sfx')
+	TEsound.play( _menu_.sound['click'], 'sfx')
 	
 	self.optmenu:mousepressed(x,y,button)
 end
